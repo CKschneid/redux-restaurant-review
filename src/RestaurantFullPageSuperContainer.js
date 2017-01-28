@@ -9,6 +9,16 @@ import {addReview} from './actions.js'
 <FeaturedRestaurantInfo {...featuredRestaurant}/>
 <DisplayReviews />
 <ComposeReview />
+{
+  featuredRestaurant.reviews.map( review => {
+    <li key={review.user}>
+      <div>
+        <h3>Comment: {review.comment}</h3>
+        <h5>{review.user} {review.date}</h5>
+      </div>
+    </li>
+  })
+}
 */
 
 class RestaurantFullPageContainer extends Component {
@@ -56,20 +66,23 @@ class RestaurantFullPageContainer extends Component {
 
         <div>
           <h1> Featured Restaurant: {featuredRestaurant.name}</h1>
+          <span> {featuredRestaurant.address[0]} <br/>
+                 {featuredRestaurant.address[1]} </span>
+          <img src="/images/ChIJ3TH9CwFZwokRIvNO1SP0WLg.jpg" />
           <h3> Stars: {stars}</h3>
           <h3>Reviews:</h3>
           <ol>
-            {
-              featuredRestaurant.reviews.map( review => {
+            {featuredRestaurant.reviews.map( review => {
+              return(
                 <li key={review.user}>
                   <div>
-                    <h3>Rating: {review.rating} stars</h3>
-                    <h3>Comment: {review.comment}</h3>
-                    <h5>{review.user} {review.date}</h5>
+                    <h4>{review.user}</h4>
+                    <p>{review.comment}</p>
+                    <span>Rating: {review.rating}</span>
                   </div>
                 </li>
-              })
-            }
+              )
+            })}
           </ol>
         </div>
         <div>
