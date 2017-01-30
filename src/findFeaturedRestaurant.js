@@ -1,8 +1,8 @@
 import find from 'lodash/find'
 
 const findFeaturedRestaurant = (restaurants, placeID) => {
-  return restaurants.find( restaurant => {
-    return restaurant.place_id == placeID
+  return find( restaurants, restaurant => {
+    return restaurant.place_id === placeID
   })
 }
 
