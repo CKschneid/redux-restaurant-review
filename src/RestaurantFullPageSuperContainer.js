@@ -47,7 +47,9 @@ class RestaurantFullPageContainer extends Component {
     synthEvent.preventDefault()
 
     const {dispatch, featuredRestaurant} = this.props
-    const {placeID} = featuredRestaurant
+    console.log("featured restaurant: ", featuredRestaurant)
+    const {place_id: placeID} = featuredRestaurant
+    console.log("place id: ", placeID)
     const {name, comment, stars} = this.state
     const date = 'today'
 
@@ -121,9 +123,10 @@ class RestaurantFullPageContainer extends Component {
 
 }
 
-const mapStateToRestaurantFullPageContainerProps = (state, {params})=>({
-  featuredRestaurant: findFeaturedRestaurant(state.restaurants, params.placeID)
-})
+const mapStateToRestaurantFullPageContainerProps = (state, {params})=>{
+
+  return { featuredRestaurant: findFeaturedRestaurant(state.restaurants, params.placeID) }
+}
 
 const RestaurantFullPageSuperContainer = withRouter(connect(mapStateToRestaurantFullPageContainerProps)(RestaurantFullPageContainer))
 
