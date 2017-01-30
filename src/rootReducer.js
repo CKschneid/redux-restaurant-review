@@ -11,15 +11,13 @@ const fetchingStateReducer = (state='false', action) => {
   }
 }
 
-const reviewReducer = (state=[], action) => {
-  switch (action.type) {
+const reviewReducer = (state=[], {
+  type,
+  ...rest
+}) => {
+  switch (type) {
     case 'ADD_REVIEW':
-      return [...state, {
-        comment: action.comment,
-        date: action.date,
-        rating: action.rating,
-        user: action.user
-      }]
+      return state.concat(rest)
     default:
       return state
   }
@@ -47,9 +45,7 @@ const restaurantsReducer = (state=[], action) => {
       return action.fetchedRestaurants
     case 'ADD_REVIEW':
       return(
-        state.map( restaurant => {
-          restaurantReducer(restaurant, action)
-        })
+        state.map( restaurant => restaurantReducer(restaurant, action))
       )
     default:
       return state
