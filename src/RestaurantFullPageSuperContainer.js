@@ -47,9 +47,7 @@ class RestaurantFullPageContainer extends Component {
     synthEvent.preventDefault()
 
     const {dispatch, featuredRestaurant} = this.props
-    console.log("featured restaurant: ", featuredRestaurant)
     const {place_id: placeID} = featuredRestaurant
-    console.log("place id: ", placeID)
     const {name, comment, stars} = this.state
     const date = 'today'
 
@@ -61,73 +59,97 @@ class RestaurantFullPageContainer extends Component {
   }
   render() {
     const {featuredRestaurant} = this.props
-    let stars = calculateStars(featuredRestaurant)
+    let stars
+    if (featuredRestaurant) {
+      stars = calculateStars(featuredRestaurant)
+    }
 
     return (
       <div>
+        {
+          featuredRestaurant ?
+          (
+            <div>
+              <div>
+                <h1> Featured Restaurant: {featuredRestaurant.name}</h1>
+                <span> {featuredRestaurant.address[0]} <br/>
+                       {featuredRestaurant.address[1]} </span>
+                <img src="/images/ChIJ3TH9CwFZwokRIvNO1SP0WLg.jpg" />
+                <h3> Stars: {stars}</h3>
+                <h3>Reviews:</h3>
+                <ol>
+                  {featuredRestaurant.reviews.map( review => {
+                    return(
+                      <li key={review.user}>
+                        <div>
+                          <h4>{review.user}</h4>
+                          <p>{review.comment}</p>
+                          <span>Rating: {review.rating}</span>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </div>
+              <div>
+                <form>
+                  <h2> Write Your Own Review</h2>
+                  <label htmlFor="name">Name:</label><br/>
+                  <input type="text"
+                         id="name"
+                         onChange={this.onNameChange}
+                         ref={(node)=> this.nameField = node}
+                  /><br/>
 
-        <div>
-          <h1> Featured Restaurant: {featuredRestaurant.name}</h1>
-          <span> {featuredRestaurant.address[0]} <br/>
-                 {featuredRestaurant.address[1]} </span>
-          <img src="/images/ChIJ3TH9CwFZwokRIvNO1SP0WLg.jpg" />
-          <h3> Stars: {stars}</h3>
-          <h3>Reviews:</h3>
-          <ol>
-            {featuredRestaurant.reviews.map( review => {
-              return(
-                <li key={review.user}>
-                  <div>
-                    <h4>{review.user}</h4>
-                    <p>{review.comment}</p>
-                    <span>Rating: {review.rating}</span>
-                  </div>
-                </li>
-              )
-            })}
-          </ol>
-        </div>
-        <div>
-          <form>
-            <h2> Write Your Own Review</h2>
-            <label htmlFor="name">Name:</label><br/>
-            <input type="text"
-                   id="name"
-                   onChange={this.onNameChange}
-                   ref={(node)=> this.nameField = node}
-            /><br/>
+                  <label htmlFor="comment">Comment:</label><br/>
+                  <input type="text"
+                         id="comment"
+                         onChange={this.onCommentChange}
+                         ref={(node) => this.commentField = node }
+                  /><br/>
 
-            <label htmlFor="comment">Comment:</label><br/>
-            <input type="text"
-                   id="comment"
-                   onChange={this.onCommentChange}
-                   ref={(node) => this.commentField = node }
-            /><br/>
-
-            <label htmlFor="rating">{'Rating (1-5)'}:</label><br/>
-            <input type="number"
-                   id="rating"
-                   onChange={this.onRatingChange}
-                   ref={(node) => this.ratingField = node}
-            /><br/>
+                  <label htmlFor="rating">{'Rating (1-5)'}:</label><br/>
+                  <input type="number"
+                         id="rating"
+                         onChange={this.onRatingChange}
+                         ref={(node) => this.ratingField = node}
+                  /><br/>
 
 
-            <button type="submit" onClick={this.onReviewSubmit}>
-              submit review
-            </button>
-          </form>
-        </div>
+                  <button type="submit" onClick={this.onReviewSubmit}>
+                    submit review
+                  </button>
+                </form>
+              </div>
+            </div>
+          ) :
+          'No Featured Restaurant'
+        }
       </div>
     )
   }
-
 }
 
-const mapStateToRestaurantFullPageContainerProps = (state, {params})=>{
+const mapStateToRestaurantFullPageContainerProps = (
+  {
+    restaurants
+  },
+  {
+  params: {
+    placeID
+  }
+}) =>
+  {
+    return {
+      featuredRestaurant: findFeaturedRestaurant(restaurants, placeID)
+    }
+  }
 
-  return { featuredRestaurant: findFeaturedRestaurant(state.restaurants, params.placeID) }
-}
 
-const RestaurantFullPageSuperContainer = withRouter(connect(mapStateToRestaurantFullPageContainerProps)(RestaurantFullPageContainer))
+const RestaurantFullPageSuperContainer = connect(
+  mapStateToRestaurantFullPageContainerProps
+)(
+  withRouter(RestaurantFullPageContainer)
+)
 
 export default RestaurantFullPageSuperContainer
