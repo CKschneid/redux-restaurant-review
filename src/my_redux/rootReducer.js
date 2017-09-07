@@ -14,12 +14,12 @@ const fetchingStateReducer = (state='false', action) => {
 const reviewReducer = (state=[], action) => {
   switch (action.type) {
     case 'ADD_REVIEW':
-      return [...state, {
+      return ([...state, {
         comment: action.comment,
         date: action.date,
         rating: action.rating,
         user: action.user
-      }]
+      }])
     default:
       return state
   }
@@ -90,4 +90,6 @@ const rootReducer = combineReducers({
 })
 
 export default rootReducer
+
+
 */
